@@ -141,7 +141,7 @@
                         type="text"
                         class="form-control"
                         placeholder="請主要輸入圖片連結"
-                        v-model="innerProduct.imageUrl"
+                        v-model.lazy="innerProduct.imageUrl"
                       />
                     </div>
                     <img
@@ -161,7 +161,7 @@
                         type="text"
                         class="form-control"
                         placeholder="請輸入圖片連結"
-                        v-model="innerProduct.imagesUrl[key]"
+                        v-model.lazy="innerProduct.imagesUrl[key]"
                       />
                     </div>
                     <img
@@ -321,6 +321,7 @@
           <div class="modal-content border-0">
             <div class="modal-header bg-danger text-white">
               <h5 id="delProductModalLabel" class="modal-title">
+                {{ tempProduct.title }}
                 <span>刪除產品</span>
               </h5>
               <button

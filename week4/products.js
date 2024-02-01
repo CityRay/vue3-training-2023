@@ -170,7 +170,7 @@ app.component('product-modal', {
             productModal.hide();
           })
           .catch((err) => {
-            alert(err.data.message);
+            alert(err.response.data.message);
             // productModal.hide();
           });
       }
