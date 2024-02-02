@@ -1,7 +1,7 @@
 // import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 
-import ProductModal from '/week5/components/ProductModal.js';
-import FormComponent from '/week5/components/FormComponent.js';
+import ProductModal from './components/ProductModal.js';
+import FormComponent from './components/FormComponent.js';
 
 // API Path
 const API_URL = 'https://vue3-course-api.hexschool.io/v2';

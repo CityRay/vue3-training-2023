@@ -7,7 +7,7 @@ defineRule('email', email);
 defineRule('min', min);
 defineRule('max', max);
 
-loadLocaleFromURL('/week5/locale/zh_TW.json');
+loadLocaleFromURL('./locale/zh_TW.json');
 configure({
   generateMessage: localize('zh_TW'),
   validateOnInput: true, // 調整為：輸入文字時，就立即進行驗證
