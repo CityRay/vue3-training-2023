@@ -1,39 +1,16 @@
 // import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 
 import ProductModal from '/week5/components/ProductModal.js';
-
-const { defineRule, Form, Field, ErrorMessage, configure } = VeeValidate;
-const { required, email, min, max } = VeeValidateRules;
-const { localize, loadLocaleFromURL } = VeeValidateI18n;
-
-defineRule('required', required);
-defineRule('email', email);
-defineRule('min', min);
-defineRule('max', max);
-
-loadLocaleFromURL('/week5/locale/zh_TW.json');
-configure({
-  generateMessage: localize('zh_TW'),
-  validateOnInput: true, // 調整為：輸入文字時，就立即進行驗證
-});
+import FormComponent from '/week5/components/FormComponent.js';
 
 // API Path
 const API_URL = 'https://vue3-course-api.hexschool.io/v2';
 const API_PATH = 'rayray-project';
 
-const userModel = {
-  name: '',
-  email: '',
-  tel: '',
-  address: '',
-};
-
 const app = Vue.createApp({
   components: {
     ProductModal: ProductModal,
-    VForm: Form,
-    VField: Field,
-    ErrorMessage: ErrorMessage,
+    FormComponent: FormComponent
   },
   data() {
     return {
@@ -41,11 +18,7 @@ const app = Vue.createApp({
       tmpProduct: {},
       product: {},
       cart: {},
-      loadingItems: [],
-      form: {
-        user: { ...userModel },
-        message: '',
-      }
+      loadingItems: []
     };
   },
   methods: {
@@ -120,6 +93,7 @@ const app = Vue.createApp({
         })
         .catch((err) => {
           // console.log(err);
+          this.loadingItems = this.loadingItems.filter(item => item !== 'cleanCart');
           alert(err.response.data.message);
         });
     },
@@ -143,22 +117,21 @@ const app = Vue.createApp({
           // console.log(err);
           alert(err.response.data.message);
         });
-
     },
     openModal(product) {
       // console.log('openModal', product);
       this.tmpProduct = { ...product };
       this.$refs.productModal.openModal();
     },
-    onFormSubmit() {
+    onFormSubmit(data, cb) {
       this.loadingItems.push('createOrder');
 
-      // console.log('onFormSubmit', this.form);
-      axios.post(`${API_URL}/api/${API_PATH}/order`, { data: this.form })
+      axios.post(`${API_URL}/api/${API_PATH}/order`, { data })
         .then((res) => {
           // console.log('onFormSubmit order', res.data);
-          this.$refs.form.resetForm();
+          cb();
           this.getCart();
+          alert(res.data.message);
         })
         .catch((err) => {
           // console.log(err);
@@ -166,17 +139,20 @@ const app = Vue.createApp({
         }).finally(() => {
           this.loadingItems = this.loadingItems.filter(item => item !== 'createOrder');
         });
-    },
-    isPhone(value) {
-      const phoneNumber = /^(09)[0-9]{8}$/;
-      return phoneNumber.test(value) ? true : '需要正確的電話號碼';
     }
   },
   mounted() {
     this.getProducts();
     this.getCart();
-  }
+  },
+  computed: {
+    disableBtn() {
+      if (!this.cart.carts?.length) return true;
+      if (this.loadingItems.includes('cleanCart')) return true;
+      if (this.loadingItems.includes('createOrder')) return true;
+      return false;
+    },
+  },
 });
-
 
 app.mount('#app');
